@@ -1,0 +1,82 @@
+/* Loading container styling */
+.loading-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #f50c0c; /* Background color */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 1;
+  transition: opacity 1s ease-in-out, transform 1s ease-in-out; /* Transition */
+}
+
+/* Welcome text styling */
+.loading-message {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #3498db;
+  opacity: 0; /* Hidden initially */
+  transform: translateY(-20px); /* Start from a slightly higher position */
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+/* Spinner animation */
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  margin-top: 20px;
+  border: 5px solid #ccc;
+  border-top: 5px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Keyframe for the spinning animation */
+@keyframes spin {
+  0% {
+      transform: rotate(0deg);
+  }
+  100% {
+      transform: rotate(360deg);
+  }
+}
+
+/* Fade out the loading screen */
+.loading-container.fade-out {
+  opacity: 0;
+  transform: scale(0.95);
+  pointer-events: none;
+}
+
+/* Show the welcome message after a delay */
+.loading-container.show-message .loading-message {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Animation text styling */
+.name-animation {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #3498db;
+  margin-top: 20px; /* Space between the message and the animation */
+  animation: nameSlide 2s ease-in-out infinite;
+}
+
+/* Keyframes for name animation */
+@keyframes nameSlide {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}

@@ -1,128 +1,463 @@
-import * as React from "react"
-import { Link } from "gatsby"
-import { StaticImage } from "gatsby-plugin-image"
+import React, { useState, useEffect } from 'react';
+import AOS from 'aos';
+import '../styles/loading.css';
+import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
+import awsLogo from '../components/picutres/aws.png';
+import linkedinLogo from '../components/picutres/linkedin.png';
+import githubLogo from '../components/picutres/github.png';
+import resumeLogo from '../components/picutres/resume.png';
+import profileLogo from '../components/picutres/profile.png';
+import gmuLogo from '../components/picutres/gmu.png';
+import 'aos/dist/aos.css';
+import 'react-vertical-timeline-component/style.min.css';
+import '../styles/global.css';
+import Modal from './Modal';
+import ClipLoader from "react-spinners/ClipLoader";
 
-import Layout from "../components/layout"
-import Seo from "../components/seo"
-import * as styles from "../components/index.module.css"
 
-const links = [
-  {
-    text: "Tutorial",
-    url: "https://www.gatsbyjs.com/docs/tutorial",
-    description:
-      "A great place to get started if you're new to web development. Designed to guide you through setting up your first Gatsby site.",
-  },
-  {
-    text: "Examples",
-    url: "https://github.com/gatsbyjs/gatsby/tree/master/examples",
-    description:
-      "A collection of websites ranging from very basic to complex/complete that illustrate how to accomplish specific tasks within your Gatsby sites.",
-  },
-  {
-    text: "Plugin Library",
-    url: "https://www.gatsbyjs.com/plugins",
-    description:
-      "Learn how to add functionality and customize your Gatsby site or app with thousands of plugins built by our amazing developer community.",
-  },
-  {
-    text: "Build and Host",
-    url: "https://www.gatsbyjs.com/cloud",
-    description:
-      "Now you’re ready to show the world! Give your Gatsby site superpowers: Build and host on Gatsby Cloud. Get started for free!",
-  },
-]
 
-const samplePageLinks = [
-  {
-    text: "Page 2",
-    url: "page-2",
-    badge: false,
-    description:
-      "A simple example of linking to another page within a Gatsby site",
-  },
-  { text: "TypeScript", url: "using-typescript" },
-  { text: "Server Side Rendering", url: "using-ssr" },
-  { text: "Deferred Static Generation", url: "using-dsg" },
-]
+const IndexPage = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // Loading state
+  const [color, setColor] = useState('black'); // Color state
 
-const moreLinks = [
-  { text: "Join us on Discord", url: "https://gatsby.dev/discord" },
-  {
-    text: "Documentation",
-    url: "https://gatsbyjs.com/docs/",
-  },
-  {
-    text: "Starters",
-    url: "https://gatsbyjs.com/starters/",
-  },
-  {
-    text: "Showcase",
-    url: "https://gatsbyjs.com/showcase/",
-  },
-  {
-    text: "Contributing",
-    url: "https://www.gatsbyjs.com/contributing/",
-  },
-  { text: "Issues", url: "https://github.com/gatsbyjs/gatsby/issues" },
-]
+  useEffect(() => {
+    AOS.init({ duration: 1000 });
 
-const utmParameters = `?utm_source=starter&utm_medium=start-page&utm_campaign=default-starter`
+    // Simulate loading time, then set isLoading to false
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000); // Adjust the delay as needed
 
-const IndexPage = () => (
-  <Layout>
-    <div className={styles.textCenter}>
-      <StaticImage
-        src="../images/example.png"
-        loading="eager"
-        width={64}
-        quality={95}
-        formats={["auto", "webp", "avif"]}
-        alt=""
-        style={{ marginBottom: `var(--space-3)` }}
-      />
-      <h1>
-        Welcome to <b>Gatsby!</b>
-      </h1>
-      <p className={styles.intro}>
-        <b>Example pages:</b>{" "}
-        {samplePageLinks.map((link, i) => (
-          <React.Fragment key={link.url}>
-            <Link to={link.url}>{link.text}</Link>
-            {i !== samplePageLinks.length - 1 && <> · </>}
-          </React.Fragment>
-        ))}
-        <br />
-        Edit <code>src/pages/index.js</code> to update this page.
-      </p>
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    // Array of colors to cycle through
+    const colors = ['red', 'blue', 'green', 'purple', 'orange', 'yellow', 'pink', 'cyan', 'magenta'];
+
+    let index = 0;
+
+    // Function to update color every 1 second
+    const colorChangeInterval = setInterval(() => {
+      setColor(colors[index]);
+      index = (index + 1) % colors.length; // Loop through colors array
+    }, 1000); // Change color every 1 second
+
+    return () => clearInterval(colorChangeInterval); // Cleanup interval on component unmount
+  }, []);
+
+  const name = ""; // const name = "Sai Duduru";
+  const nameLetters = name.split("");
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
+  // Loading screen component
+  const LoadingScreen = () => (
+    <div className="loading-container">
+      <div className="loading-message">Welcome to my Personal Website</div>
+      <div className="loading-spinner"></div>
+      <div className="name-animation">Sai Duduru</div>
     </div>
-    <ul className={styles.list}>
-      {links.map(link => (
-        <li key={link.url} className={styles.listItem}>
-          <a
-            className={styles.listItemLink}
-            href={`${link.url}${utmParameters}`}
-          >
-            {link.text} ↗
-          </a>
-          <p className={styles.listItemDescription}>{link.description}</p>
-        </li>
-      ))}
-    </ul>
-    {moreLinks.map((link, i) => (
-      <React.Fragment key={link.url}>
-        <a href={`${link.url}${utmParameters}`}>{link.text}</a>
-        {i !== moreLinks.length - 1 && <> · </>}
-      </React.Fragment>
-    ))}
-  </Layout>
-)
+  );
 
-/**
- * Head export to define metadata for the page
- *
- * See: https://www.gatsbyjs.com/docs/reference/built-in-components/gatsby-head/
- */
-export const Head = () => <Seo title="Home" />
+  // Conditionally render loading screen or main content
+  return (
+    <>
+      {isLoading ? (
+        <LoadingScreen />
+      ) : (
+        <div>
+          <main>
+            <div className="content">
+              <header>
+                <div className="name-container">
+                  {nameLetters.map((letter, index) => (
+                    <span
+                      key={index}
+                      className={`name-letter hover-effect ${letter === ' ' ? 'space' : ''}`}
+                      onMouseOver={(e) => e.target.classList.add('shine')}
+                      onAnimationEnd={(e) => e.target.classList.remove('shine')}
+                    >
+                      {letter}
+                    </span>
+                  ))}
+                </div>
+              </header>
 
-export default IndexPage
+              {/* Quantum web component with dynamic color
+              <div className="quantum-container" data-aos="fade-up">
+                <l-quantum size="200" speed="3" color={color}></l-quantum>
+              </div> */}
+              
+<div className="main-container">
+  <section id="about" data-aos="fade-up" className="section-content">
+    <div className="about-header-container">
+      <h2>About Me</h2>
+      <div className="helix-container">
+        <l-helix size="40" speed="3" color={color}></l-helix>
+      </div>
+    </div>
+    <span className="highlighted-text">
+      I’m Sai Duduru, a Computer Science Engineering graduate from Virginia Tech with hands-on experience in cloud computing and software development. 
+      I am currently a Cloud Support Engineer at AWS, I specialize in deploying and managing cloud services, ensuring robust and secure environments. 
+      I am also interested in the world of Cyber Security and Data Engineering. Welcome to my personal website where I showcase my projects and skills.
+    </span>
+  </section>
+
+  <section id="work" className="section-content">
+  <div className="work-header-container">
+    <h2 data-aos="fade-right">Work Experience</h2>
+    <div className="hourglass-container">
+      <l-hourglass size="30" bg-opacity="0.1" speed="1.75" color="red"></l-hourglass>
+    </div>
+  </div>
+  <VerticalTimeline>
+    <VerticalTimelineElement
+  className="vertical-timeline-element--work"
+  iconStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
+  icon={
+    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+      <img 
+        src={awsLogo} 
+        alt="AWS Logo" 
+        style={{ 
+          position: 'absolute', 
+          top: '50%', 
+          left: '50%', 
+          transform: 'translate(-50%, -50%)', 
+          width: '60%', 
+          height: '60%', 
+        }} 
+      />
+    </div>
+  }
+>
+  <div className="work-card">
+    
+    <h3 className="vertical-timeline-element-title">Cloud Support Engineer (DMI)</h3>
+    <h4 className="vertical-timeline-element-subtitle">Amazon Web Services, Herndon, VA</h4>
+    <div className="date">June 2024 – Present</div>
+    <li>Collaborated internationally with global enterprises and GovCloud clients to enhance and deliver scalable solutions and resolve complex infrastructure and networking issues. </li>
+    <li>Specializing in AWS services such as SQS, SNS, GameLift, Amplify, GameSparks, SimSpaceWeaver</li>
+    <li>Received MVP award for my domain across all North America Sites</li>
+    <li>Provided solutions on how to configure clients cloud infrastructure to project specifications</li>
+    <li>Designed and deployed Amplify-based full-stack solutions integrating AppSync GraphQL APIs and DynamoDB with secure Cognito authentication workflows. </li>
+    <li>Provided tailored cloud infrastructure configurations in coordination with third-party vendors and carriers.</li>
+    <li>Helped mentor and assist new engineers, sharing best practices and tooling insights.</li>
+  </div>
+</VerticalTimelineElement>
+
+
+<VerticalTimelineElement
+  className="vertical-timeline-element--work"
+  iconStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
+  icon={
+    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+      <img 
+        src={awsLogo} 
+        alt="AWS Logo" 
+        style={{ 
+          position: 'absolute', 
+          top: '50%', 
+          left: '50%', 
+          transform: 'translate(-50%, -50%)', 
+          width: '60%', 
+          height: '60%', 
+        }} 
+      />
+    </div>
+  }
+>
+<div className="work-card">
+      <h3 className="vertical-timeline-element-title">Cloud Support Associate Intern</h3>
+      <h4 className="vertical-timeline-element-subtitle">Amazon Web Services (AWS), Herndon, VA</h4>
+      <div className="date">May 2023 – August 2023</div>
+      <ul>
+      <p></p>
+        <li>Deployed and managed EC2 instances, incorporating load balancers, auto-scaling, and enforcing secure environments.</li>
+        <li>Demonstrated expertise in securing a robust VPC infrastructure, ensuring data protection through policy management.</li>
+        <li>Proficiently managed and built secure, highly available database servers such as DynamoDB, Aurora, RDS, and Redshift.</li>
+        <li>Provided technical support to customers, proficiently troubleshooting and resolving service-related issues.</li>
+        <li>Actively participated in case shadowing to deliver timely and efficient solutions.</li>
+        <li>Contributed to the knowledge base by documenting interactions and sharing valuable insights and best practices.</li>
+      </ul>
+      </div>
+    </VerticalTimelineElement>
+
+    <VerticalTimelineElement
+  className="vertical-timeline-element--work"
+  iconStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
+  icon={
+    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+      <img 
+        src={gmuLogo} 
+        alt="GMU Logo" 
+        style={{ 
+          position: 'absolute', 
+          top: '50%', 
+          left: '50%', 
+          transform: 'translate(-50%, -50%)', 
+          width: '60%', 
+          height: '60%', 
+        }} 
+      />
+    </div>
+  }
+>
+<div className="work-card">
+      <h3 className="vertical-timeline-element-title">Computer Science Internship - Research Assistant</h3>
+      <h4 className="vertical-timeline-element-subtitle">George Mason University</h4>
+      <div className="date">June 2019 – August 2019</div>
+      <ul>
+        <li>Updated and redacted research information, digitized data, and ensured proper storage management.</li>
+        <li>Conducted research and analysis on social patterns and data, contributing to a better understanding of societal dynamics.</li>
+        <li>Acquired a foundation in basic ARC-GIS, employing geospatial analysis techniques to enhance data visualization.</li>
+      </ul>
+      </div>
+    </VerticalTimelineElement>
+  </VerticalTimeline>
+</section>
+
+
+              <section id="skills" data-aos="fade-up" className="section-content">
+                <h2>Skills & Certifications</h2>
+                <div className="skills-container">
+                  <div className="skills-box">
+                    <h3>Technical Skills</h3>
+                    <ul>
+                      <li>Programming Languages: Python, Java, C, Swift</li>
+                      <li>Cloud Computing: AWS, Azure</li>
+                      <li>Web Development: JavaScript, React, HTML, CSS, Node.js </li>
+                      <li>Data Tools: Pandas, Scikit-Learn, Jupyter, Pytorch</li> 
+                      <li>Database Management: SQL,Docker, Kubernetes</li>                                                   
+                    </ul>
+                  </div>
+                  <div className="skills-box">
+  <h3>Certifications</h3>
+  <ul>
+  <li><a href="https://aws.amazon.com/certification/certified-solutions-architect-associate/" target="_blank">AWS Certified Solutions Architect</a></li>
+  <li><a href="https://aws.amazon.com/certification/certified-data-engineer-associate/?ch=sec&sec=rmg&d=1" target="_blank">AWS Certified Data Engineer Associate</a></li>
+  <li><a href="https://aws.amazon.com/certification/certified-cloud-practitioner/" target="_blank">AWS Certified Cloud Practitioner</a></li>
+  <li><a href="https://aws.amazon.com/certification/certified-ai-practitioner/" target="_blank">AWS Certified AI Practioner</a></li>
+  </ul>
+</div>
+
+<div className="skills-box">
+  <h3>Upcoming Certifications</h3>
+  <ul>
+  <li><a href="https://aws.amazon.com/certification/certified-machine-learning-specialty/" target="_blank">AWS Certified Machine Learning - Specialty</a></li>
+  <li><a href="https://aws.amazon.com/certification/certified-developer-associate/" target="_blank">AWS Certified Developer - Associate</a></li>
+    <li>Azure Certifications</li>
+    <li></li>
+  </ul>
+</div>
+
+
+<div className="skills-box">
+  <h3>Skills in training</h3>
+  <ul>
+  <li>Taking courses in Machine Learning University to learn Neural Networking, Training Data,Language chains, AutoGluon</li>
+  <li>At work training with AWS SimSpaceWeaver to learn how to simulate</li>
+    <li>Learning tensorFlow</li>
+    <li>Learning how to play acutal Golf</li>
+  </ul>
+</div>
+
+                </div>
+                </section>
+
+                
+                <section id="projects" className="section-content">
+                <h5>Projects</h5>
+                <div className="container">
+                <div className="card" data-aos="fade-up">
+                    <header>
+                      <span></span>
+                      <h6>Created iOS App using AWS Amplify SDK</h6>
+                    </header>
+                    <section>
+                      <p>
+                      Using AWS Amplify SDK, Developed backend and frontend for a iOS app. 
+                      The iOS app is integrated with the AppSync API, which interacts with DynamoDB as the backend for data storage, 
+                      and uses Cognito for authentication.
+                      users submit data to be stored in a DynamoDB table for querying.
+                      Utilized Amplify CLI, Xcode, Cocoa Pods, Swift                       
+                      </p>
+                    </section>
+                    <footer className="author">
+                      <a href="https://github.com/SaiDuduru">Read more</a>
+                    </footer>
+                  </div>
+
+                  <div className="card" data-aos="fade-up">
+                    <header>
+                      <span></span>
+                      <h6>Created Android App using AWS Amplify SDK</h6>
+                    </header>
+                    <section>
+                      <p>
+                      Using AWS Amplify SDK, Developed backend and frontend for a Android app. 
+                      The Android app is integrated with the AppSync API, which interacts with DynamoDB as the backend for data storage, 
+                      and uses Cognito for authentication.
+                      users submit data to be stored in a DynamoDB table for querying.
+                      Utilized Amplify CLI, Android Studio, and Node.js                       
+                      </p>
+                    </section>
+                    <footer className="author">
+                      <a href="https://github.com/SaiDuduru">Read more</a>
+                    </footer>
+                  </div>
+                 
+
+                  <div className="card" data-aos="fade-up">
+                    <header>
+                      <span></span>
+                      <h6>In Progress: Stock Market Tracker Dashboard</h6>
+                    </header>
+                    <section>
+                      <p>
+                    Creating a Stock Market Tracker Dashboard ETL Pipeline Using Python, AWS Athena for processing. Will be using Tiingo stock API
+                    gather real time data and stock changes.                     
+                      </p>
+                    </section>
+                    <footer className="author">
+                      <a href="https://github.com/SaiDuduru">Read more</a>
+                    </footer>
+                  </div>
+
+                  <div className="card" data-aos="fade-up">
+                    <header>
+                      <span></span>
+                      <h6>Personal Website</h6>
+                    </header>
+                    <section>
+                      <p>
+                        Built a personal website to showcase my resume and other skills, built using gatsby, and uses html, css, react, javscript.
+                        Currently in the process of learning how to make custom animations, transitions, and layouts for websites.
+                      </p>
+                    </section>
+                    <footer className="author">
+                      <a href="https://github.com/SaiDuduru">Read more</a>
+                    </footer>
+                  </div>
+
+                  <div className="card" data-aos="fade-up">
+                    <header>
+                      <span></span>
+                      <h6>CS 3214 Personal web and video server Project</h6>
+                    </header>
+                    <section>
+                      <p>
+                        Developing a robust and scalable personal web server in C. Aiming to implement HTTP/1.1, file sharing, MP4 streaming, and Token-based authentication. Going to gain expertise in network protocols, security, and concurrent programming.
+                      </p>
+                    </section>
+                    <footer className="author">
+                      <a href="https://github.com/SaiDuduru">Read more</a>
+                    </footer>
+                  </div>
+
+                  <div className="card" data-aos="fade-up">
+                    <header>
+                      <span></span>
+                      <h6>CS 3114 Data Structure</h6>
+                    </header>
+                    <section>
+                      <p>
+                        Data Structure that supporting 3D point set: Implemented a high-performance data structure supporting range queries in 3D space. Utilized Range Trees and KD-Trees to efficiently compute the number of points within or on the boundary of a given rectangular prism. Achieved optimal time and space complexities.
+                      </p>
+                    </section>
+                    <footer className="author">
+                      <a href="https://github.com/SaiDuduru">Read more</a>
+                    </footer>
+                  </div>
+
+                  <div className="card" data-aos="fade-up">
+                    <header>
+                      <span></span>
+                      <h6>CS 3114 Kruskal’s</h6>
+                    </header>
+                    <section>
+                      <p>
+                        Implemented Kruskal's algorithm to compute the cost of the minimum spanning tree and perform k-clustering on a weighted connected undirected graph. Utilized Union-Find data structure with path compression technique to optimize runtime efficiency and achieved accurate results on multiple test cases.
+                      </p>
+                    </section>
+                    <footer className="author">
+  <a href="https://github.com/SaiDuduru">Read more</a>
+</footer>
+
+                  </div>
+
+                 
+
+                  <div className="card" data-aos="fade-up">
+                    <header>
+                      <span></span>
+                      <h6>Covid Tracker</h6>
+                    </header>
+                    <section>
+                      <p>
+                        Developed a Java-based tracker that categorized COVID-19 data by ethnicity, infection rates, providing insights into regional and demographic impacts.
+                      </p>
+                    </section>
+                    <footer className="author">
+                      <a href="https://github.com/SaiDuduru">Read more</a>
+                    </footer>
+                  </div>
+
+                 
+
+                  
+                </div>
+              </section>
+            </div>
+          </div>
+ {/* Floating buttons container */}
+ <div className="fixed-button-container">
+  <a
+    href="https://www.linkedin.com/in/saiduduru/"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="fixed-button linkedin-button"
+  >
+    <img src={linkedinLogo} alt="LinkedIn" />
+  </a>
+  <a
+    href="/resume.pdf" 
+    target="_blank"
+    rel="noopener noreferrer"
+    className="fixed-button resume-button"
+  >
+    <img src={resumeLogo} alt="Resume" />
+  </a>
+  <a
+    href="https://github.com/sai-duduru"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="fixed-button github-button"
+  >
+    <img src={githubLogo} alt="Github" />
+  </a>
+  <a
+    href="#"
+    className="fixed-button contact-button"
+    onClick={openModal} 
+  >
+    <img src={profileLogo} alt="Contact" />
+  </a>
+</div>
+
+
+          {isModalOpen && <Modal isOpen={isModalOpen} onClose={closeModal} />} {/* Render the modal conditionally */}
+          
+          <footer>
+            <p>&copy; 2025 My Personal Website</p>
+          </footer>
+          </main>
+        </div>
+      )}
+    </>
+  );
+};
+
+export default IndexPage;
