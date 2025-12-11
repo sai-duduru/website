@@ -14,12 +14,13 @@ import '../styles/global.css';
 import Modal from './Modal';
 import ClipLoader from "react-spinners/ClipLoader";
 
-
-
 const IndexPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // Loading state
   const [color, setColor] = useState('black'); // Color state
+  const [collapsed, setCollapsed] = useState({});
+  const [typedName, setTypedName] = useState('');
+  const fullName = "Sai Duduru";
 
   useEffect(() => {
     AOS.init({ duration: 1000 });
@@ -47,10 +48,82 @@ const IndexPage = () => {
     return () => clearInterval(colorChangeInterval); // Cleanup interval on component unmount
   }, []);
 
-  const name = ""; // const name = "Sai Duduru";
-  const nameLetters = name.split("");
+  useEffect(() => {
+    // Update CSS vars so the background glow follows the cursor
+    const handleMouseMove = (event) => {
+      const x = `${event.clientX}px`;
+      const y = `${event.clientY}px`;
+      document.documentElement.style.setProperty('--mouse-x', x);
+      document.documentElement.style.setProperty('--mouse-y', y);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  useEffect(() => {
+    let index = 0;
+    const typeInterval = setInterval(() => {
+      setTypedName(fullName.slice(0, index + 1));
+      index += 1;
+
+      if (index === fullName.length) {
+        clearInterval(typeInterval);
+      }
+    }, 150);
+
+    return () => clearInterval(typeInterval);
+  }, [fullName]);
+
+  const nameLetters = typedName.split("");
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+  const experiences = [
+    {
+      id: 'aws-dmi',
+      title: 'Cloud Support Engineer (DMI)',
+      subtitle: 'Amazon Web Services, Herndon, VA',
+      date: 'June 2024 – Present',
+      icon: awsLogo,
+      bullets: [
+        'Collaborated internationally with global enterprises and GovCloud clients to enhance and deliver scalable solutions and resolve complex infrastructure and networking issues.',
+        'Specializing in AWS services such as SQS, SNS, GameLift, Amplify, GameSparks, SimSpaceWeaver',
+        'Received MVP award for my domain across all North America Sites',
+        'Provided solutions on how to configure clients cloud infrastructure to project specifications',
+        'Designed and deployed Amplify-based full-stack solutions integrating AppSync GraphQL APIs and DynamoDB with secure Cognito authentication workflows.',
+        'Provided tailored cloud infrastructure configurations in coordination with third-party vendors and carriers.',
+        'Helped mentor and assist new engineers, sharing best practices and tooling insights.'
+      ]
+    },
+    {
+      id: 'aws-intern',
+      title: 'Cloud Support Associate Intern',
+      subtitle: 'Amazon Web Services (AWS), Herndon, VA',
+      date: 'May 2023 – August 2023',
+      icon: awsLogo,
+      bullets: [
+        'Deployed and managed EC2 instances, incorporating load balancers, auto-scaling, and enforcing secure environments.',
+        'Demonstrated expertise in securing a robust VPC infrastructure, ensuring data protection through policy management.',
+        'Proficiently managed and built secure, highly available database servers such as DynamoDB, Aurora, RDS, and Redshift.',
+        'Provided technical support to customers, proficiently troubleshooting and resolving service-related issues.',
+        'Actively participated in case shadowing to deliver timely and efficient solutions.',
+        'Contributed to the knowledge base by documenting interactions and sharing valuable insights and best practices.'
+      ]
+    },
+    {
+      id: 'gmu',
+      title: 'Computer Science Internship - Research Assistant',
+      subtitle: 'George Mason University',
+      date: 'June 2019 – August 2019',
+      icon: gmuLogo,
+      bullets: [
+        'Updated and redacted research information, digitized data, and ensured proper storage management.',
+        'Conducted research and analysis on social patterns and data, contributing to a better understanding of societal dynamics.',
+        'Acquired a foundation in basic ARC-GIS, employing geospatial analysis techniques to enhance data visualization.'
+      ]
+    }
+  ];
 
   // Loading screen component
   const LoadingScreen = () => (
@@ -71,7 +144,7 @@ const IndexPage = () => {
           <main>
             <div className="content">
               <header>
-                <div className="name-container">
+                <div className="name-container typewriter">
                   {nameLetters.map((letter, index) => (
                     <span
                       key={index}
@@ -113,109 +186,61 @@ const IndexPage = () => {
     </div>
   </div>
   <VerticalTimeline>
-    <VerticalTimelineElement
-  className="vertical-timeline-element--work"
-  iconStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
-  icon={
-    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-      <img 
-        src={awsLogo} 
-        alt="AWS Logo" 
-        style={{ 
-          position: 'absolute', 
-          top: '50%', 
-          left: '50%', 
-          transform: 'translate(-50%, -50%)', 
-          width: '60%', 
-          height: '60%', 
-        }} 
-      />
-    </div>
-  }
->
-  <div className="work-card">
-    
-    <h3 className="vertical-timeline-element-title">Cloud Support Engineer (DMI)</h3>
-    <h4 className="vertical-timeline-element-subtitle">Amazon Web Services, Herndon, VA</h4>
-    <div className="date">June 2024 – Present</div>
-    <li>Collaborated internationally with global enterprises and GovCloud clients to enhance and deliver scalable solutions and resolve complex infrastructure and networking issues. </li>
-    <li>Specializing in AWS services such as SQS, SNS, GameLift, Amplify, GameSparks, SimSpaceWeaver</li>
-    <li>Received MVP award for my domain across all North America Sites</li>
-    <li>Provided solutions on how to configure clients cloud infrastructure to project specifications</li>
-    <li>Designed and deployed Amplify-based full-stack solutions integrating AppSync GraphQL APIs and DynamoDB with secure Cognito authentication workflows. </li>
-    <li>Provided tailored cloud infrastructure configurations in coordination with third-party vendors and carriers.</li>
-    <li>Helped mentor and assist new engineers, sharing best practices and tooling insights.</li>
-  </div>
-</VerticalTimelineElement>
-
-
-<VerticalTimelineElement
-  className="vertical-timeline-element--work"
-  iconStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
-  icon={
-    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-      <img 
-        src={awsLogo} 
-        alt="AWS Logo" 
-        style={{ 
-          position: 'absolute', 
-          top: '50%', 
-          left: '50%', 
-          transform: 'translate(-50%, -50%)', 
-          width: '60%', 
-          height: '60%', 
-        }} 
-      />
-    </div>
-  }
->
-<div className="work-card">
-      <h3 className="vertical-timeline-element-title">Cloud Support Associate Intern</h3>
-      <h4 className="vertical-timeline-element-subtitle">Amazon Web Services (AWS), Herndon, VA</h4>
-      <div className="date">May 2023 – August 2023</div>
-      <ul>
-      <p></p>
-        <li>Deployed and managed EC2 instances, incorporating load balancers, auto-scaling, and enforcing secure environments.</li>
-        <li>Demonstrated expertise in securing a robust VPC infrastructure, ensuring data protection through policy management.</li>
-        <li>Proficiently managed and built secure, highly available database servers such as DynamoDB, Aurora, RDS, and Redshift.</li>
-        <li>Provided technical support to customers, proficiently troubleshooting and resolving service-related issues.</li>
-        <li>Actively participated in case shadowing to deliver timely and efficient solutions.</li>
-        <li>Contributed to the knowledge base by documenting interactions and sharing valuable insights and best practices.</li>
-      </ul>
-      </div>
-    </VerticalTimelineElement>
-
-    <VerticalTimelineElement
-  className="vertical-timeline-element--work"
-  iconStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
-  icon={
-    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-      <img 
-        src={gmuLogo} 
-        alt="GMU Logo" 
-        style={{ 
-          position: 'absolute', 
-          top: '50%', 
-          left: '50%', 
-          transform: 'translate(-50%, -50%)', 
-          width: '60%', 
-          height: '60%', 
-        }} 
-      />
-    </div>
-  }
->
-<div className="work-card">
-      <h3 className="vertical-timeline-element-title">Computer Science Internship - Research Assistant</h3>
-      <h4 className="vertical-timeline-element-subtitle">George Mason University</h4>
-      <div className="date">June 2019 – August 2019</div>
-      <ul>
-        <li>Updated and redacted research information, digitized data, and ensured proper storage management.</li>
-        <li>Conducted research and analysis on social patterns and data, contributing to a better understanding of societal dynamics.</li>
-        <li>Acquired a foundation in basic ARC-GIS, employing geospatial analysis techniques to enhance data visualization.</li>
-      </ul>
-      </div>
-    </VerticalTimelineElement>
+    {experiences.map((role) => {
+      const isCollapsed = collapsed[role.id];
+      const bulletsToShow = isCollapsed ? role.bullets.slice(0, 3) : role.bullets;
+      return (
+        <VerticalTimelineElement
+          key={role.id}
+          className="vertical-timeline-element--work"
+          iconStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
+          icon={
+            <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+              <img 
+                src={role.icon} 
+                alt={`${role.title} Logo`} 
+                style={{ 
+                  position: 'absolute', 
+                  top: '50%', 
+                  left: '50%', 
+                  transform: 'translate(-50%, -50%)', 
+                  width: '60%', 
+                  height: '60%', 
+                }} 
+              />
+            </div>
+          }
+        >
+          <div className="work-card interactive-card">
+            <div className="work-header">
+              <div>
+                <h3 className="vertical-timeline-element-title">{role.title}</h3>
+                <h4 className="vertical-timeline-element-subtitle">{role.subtitle}</h4>
+              </div>
+              <div className="pill">{role.date}</div>
+            </div>
+            <ul>
+              {bulletsToShow.map((item, index) => (
+                <li key={index}>{item}</li>
+              ))}
+            </ul>
+            {role.bullets.length > 3 && (
+              <button
+                className="toggle-bullets"
+                onClick={() =>
+                  setCollapsed((prev) => ({
+                    ...prev,
+                    [role.id]: !prev[role.id],
+                  }))
+                }
+              >
+                {isCollapsed ? 'Show more' : 'Show less'}
+              </button>
+            )}
+          </div>
+        </VerticalTimelineElement>
+      );
+    })}
   </VerticalTimeline>
 </section>
 
