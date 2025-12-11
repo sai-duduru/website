@@ -22,10 +22,12 @@ const IndexPage = () => {
   const [collapsed, setCollapsed] = useState({});
   const [typedName, setTypedName] = useState('');
   const [timelineLayout, setTimelineLayout] = useState('2-columns');
+  const [autoScroll, setAutoScroll] = useState(false);
   const fullName = "Sai Duduru";
   const frameRef = useRef(null);
   const latestPageCoords = useRef({ x: '50%', y: '50%' });
   const lastClientCoords = useRef(null);
+  const scrollRafRef = useRef(null);
 
   useEffect(() => {
     AOS.init({ duration: 1000 });
@@ -159,6 +161,39 @@ const IndexPage = () => {
     return () => window.removeEventListener('resize', updateTimelineLayout);
   }, []);
 
+  // Gentle auto-scroll tour; pauses on user input
+  useEffect(() => {
+    const stopOnUserInput = () => setAutoScroll(false);
+    if (autoScroll) {
+      window.addEventListener('wheel', stopOnUserInput, { passive: true });
+      window.addEventListener('touchstart', stopOnUserInput, { passive: true });
+    }
+    return () => {
+      window.removeEventListener('wheel', stopOnUserInput);
+      window.removeEventListener('touchstart', stopOnUserInput);
+    };
+  }, [autoScroll]);
+
+  useEffect(() => {
+    const step = () => {
+      if (!autoScroll) return;
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      if (window.scrollY >= maxScroll - 2) {
+        setAutoScroll(false);
+        return;
+      }
+      window.scrollBy({ top: 2.14, left: 0, behavior: 'auto' });
+      scrollRafRef.current = requestAnimationFrame(step);
+    };
+
+    if (autoScroll) {
+      scrollRafRef.current = requestAnimationFrame(step);
+    }
+    return () => {
+      if (scrollRafRef.current) cancelAnimationFrame(scrollRafRef.current);
+    };
+  }, [autoScroll]);
+
   const nameLetters = typedName.split("");
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -278,6 +313,13 @@ const IndexPage = () => {
   <section id="work" className="section-content">
   <div className="work-header-container">
     <h2 data-aos="fade-right">Work Experience</h2>
+    <button
+      type="button"
+      className={`auto-scroll-toggle ${autoScroll ? 'active' : ''}`}
+      onClick={() => setAutoScroll((prev) => !prev)}
+    >
+      {autoScroll ? 'Pause tour' : 'Auto-scroll tour'}
+    </button>
     <div className="hourglass-container">
       <l-hourglass size="30" bg-opacity="0.1" speed="1.75" color="red"></l-hourglass>
     </div>
