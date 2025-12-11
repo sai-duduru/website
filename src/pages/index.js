@@ -282,14 +282,19 @@ const IndexPage = () => {
       <l-hourglass size="30" bg-opacity="0.1" speed="1.75" color="red"></l-hourglass>
     </div>
   </div>
-  <VerticalTimeline layout={timelineLayout} lineColor="rgba(123, 210, 255, 0.35)">
+  <VerticalTimeline
+    layout={timelineLayout}
+    lineColor="rgba(123, 210, 255, 0.35)"
+    className="stack-timeline circuit-timeline"
+  >
     {experiences.map((role) => {
       const isCollapsed = collapsed[role.id];
       const bulletsToShow = isCollapsed ? role.bullets.slice(0, 3) : role.bullets;
       return (
         <VerticalTimelineElement
           key={role.id}
-          className="vertical-timeline-element--work"
+          className="vertical-timeline-element--work stack-node"
+          iconClassName="bezier-icon"
           iconStyle={{
             background: 'linear-gradient(135deg, #111c32, #1b2a4a)',
             color: '#fff',
