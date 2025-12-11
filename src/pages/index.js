@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import AOS from 'aos';
 import '../styles/loading.css';
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
@@ -8,6 +8,7 @@ import githubLogo from '../components/picutres/github.png';
 import resumeLogo from '../components/picutres/resume.png';
 import profileLogo from '../components/picutres/profile.png';
 import gmuLogo from '../components/picutres/gmu.png';
+import strawHat from '../components/picutres/strawhat.svg';
 import 'aos/dist/aos.css';
 import 'react-vertical-timeline-component/style.min.css';
 import '../styles/global.css';
@@ -20,7 +21,11 @@ const IndexPage = () => {
   const [color, setColor] = useState('black'); // Color state
   const [collapsed, setCollapsed] = useState({});
   const [typedName, setTypedName] = useState('');
+  const [timelineLayout, setTimelineLayout] = useState('2-columns');
   const fullName = "Sai Duduru";
+  const frameRef = useRef(null);
+  const latestPageCoords = useRef({ x: '50%', y: '50%' });
+  const lastClientCoords = useRef(null);
 
   useEffect(() => {
     AOS.init({ duration: 1000 });
@@ -32,6 +37,13 @@ const IndexPage = () => {
 
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    // Register any data-aos elements that appear after the loader finishes
+    if (!isLoading) {
+      AOS.refreshHard();
+    }
+  }, [isLoading]);
 
   useEffect(() => {
     // Array of colors to cycle through
@@ -50,15 +62,75 @@ const IndexPage = () => {
 
   useEffect(() => {
     // Update CSS vars so the background glow follows the cursor
-    const handleMouseMove = (event) => {
-      const x = `${event.clientX}px`;
-      const y = `${event.clientY}px`;
+    const setCSSVars = () => {
+      const { x, y } = latestPageCoords.current;
       document.documentElement.style.setProperty('--mouse-x', x);
       document.documentElement.style.setProperty('--mouse-y', y);
+      frameRef.current = null;
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    const scheduleCSSUpdate = () => {
+      if (frameRef.current) return;
+      frameRef.current = requestAnimationFrame(setCSSVars);
+    };
+
+    const updateFromClientCoords = (immediate = false) => {
+      const client = lastClientCoords.current;
+      if (!client) return;
+      latestPageCoords.current = {
+        x: `${client.x + window.scrollX}px`,
+        y: `${client.y + window.scrollY}px`,
+      };
+
+      if (immediate) {
+        if (frameRef.current) {
+          cancelAnimationFrame(frameRef.current);
+          frameRef.current = null;
+        }
+        const { x, y } = latestPageCoords.current;
+        document.documentElement.style.setProperty('--mouse-x', x);
+        document.documentElement.style.setProperty('--mouse-y', y);
+        return;
+      }
+
+      scheduleCSSUpdate();
+    };
+
+    // Initialize to center of viewport so the glow has a sane starting point
+    if (typeof window !== 'undefined') {
+      lastClientCoords.current = {
+        x: window.innerWidth / 2,
+        y: window.innerHeight / 2,
+      };
+      updateFromClientCoords(true);
+    }
+
+    const handleMouseMove = (event) => {
+      lastClientCoords.current = {
+        x: event.clientX,
+        y: event.clientY,
+      };
+      latestPageCoords.current = {
+        x: `${event.pageX}px`,
+        y: `${event.pageY}px`,
+      };
+
+      // Batch updates to the next animation frame to avoid jank on fast moves/scroll
+      scheduleCSSUpdate();
+    };
+
+    const handleScroll = () => {
+      // Keep highlight aligned when wheel scroll happens without mousemove
+      updateFromClientCoords(true);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('scroll', handleScroll);
+      if (frameRef.current) cancelAnimationFrame(frameRef.current);
+    };
   }, []);
 
   useEffect(() => {
@@ -75,6 +147,18 @@ const IndexPage = () => {
     return () => clearInterval(typeInterval);
   }, [fullName]);
 
+  useEffect(() => {
+    const updateTimelineLayout = () => {
+      if (typeof window === 'undefined') return;
+      const isNarrow = window.innerWidth < 900;
+      setTimelineLayout(isNarrow ? '1-column-left' : '2-columns');
+    };
+
+    updateTimelineLayout();
+    window.addEventListener('resize', updateTimelineLayout, { passive: true });
+    return () => window.removeEventListener('resize', updateTimelineLayout);
+  }, []);
+
   const nameLetters = typedName.split("");
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -88,9 +172,9 @@ const IndexPage = () => {
       icon: awsLogo,
       bullets: [
         'Collaborated internationally with global enterprises and GovCloud clients to enhance and deliver scalable solutions and resolve complex infrastructure and networking issues.',
-        'Specializing in AWS services such as SQS, SNS, GameLift, Amplify, GameSparks, SimSpaceWeaver',
-        'Received MVP award for my domain across all North America Sites',
-        'Provided solutions on how to configure clients cloud infrastructure to project specifications',
+        'Specialized in AWS services such as SQS, SNS, GameLift, Amplify, GameSparks, and SimSpaceWeaver.',
+        'Received MVP award for my domain across all North America sites.',
+        'Provided solutions on how to configure clients’ cloud infrastructure to project specifications.',
         'Designed and deployed Amplify-based full-stack solutions integrating AppSync GraphQL APIs and DynamoDB with secure Cognito authentication workflows.',
         'Provided tailored cloud infrastructure configurations in coordination with third-party vendors and carriers.',
         'Helped mentor and assist new engineers, sharing best practices and tooling insights.'
@@ -142,6 +226,17 @@ const IndexPage = () => {
       ) : (
         <div>
           <main>
+            <nav className="top-nav">
+              <div className="nav-brand">Sai Duduru</div>
+              <div className="nav-links">
+                <a href="#about">About</a>
+                <a href="#work">Work</a>
+                <a href="#skills">Skills</a>
+                <a href="#projects">Projects</a>
+                <button type="button" className="nav-contact" onClick={openModal}>Contact</button>
+              </div>
+            </nav>
+
             <div className="content">
               <header>
                 <div className="name-container typewriter">
@@ -155,6 +250,7 @@ const IndexPage = () => {
                       {letter}
                     </span>
                   ))}
+                  <img src={strawHat} alt="Straw hat" className="straw-hat" />
                 </div>
               </header>
 
@@ -173,7 +269,8 @@ const IndexPage = () => {
     </div>
     <span className="highlighted-text">
       I’m Sai Duduru, a Computer Science Engineering graduate from Virginia Tech with hands-on experience in cloud computing and software development. 
-      I am currently a Cloud Support Engineer at AWS, I specialize in deploying and managing cloud services, ensuring robust and secure environments. 
+      I am currently a Cloud Support Engineer at AWS. I specialize in deploying and managing cloud services, ensuring robust and secure environments.
+      I am seeking new opportunities and am open to interviews and new roles.
       I am also interested in the world of Cyber Security and Data Engineering. Welcome to my personal website where I showcase my projects and skills.
     </span>
   </section>
@@ -185,7 +282,7 @@ const IndexPage = () => {
       <l-hourglass size="30" bg-opacity="0.1" speed="1.75" color="red"></l-hourglass>
     </div>
   </div>
-  <VerticalTimeline>
+  <VerticalTimeline layout={timelineLayout} lineColor="rgba(123, 210, 255, 0.35)">
     {experiences.map((role) => {
       const isCollapsed = collapsed[role.id];
       const bulletsToShow = isCollapsed ? role.bullets.slice(0, 3) : role.bullets;
@@ -193,7 +290,11 @@ const IndexPage = () => {
         <VerticalTimelineElement
           key={role.id}
           className="vertical-timeline-element--work"
-          iconStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
+          iconStyle={{
+            background: 'linear-gradient(135deg, #111c32, #1b2a4a)',
+            color: '#fff',
+            border: '1px solid rgba(123, 210, 255, 0.35)',
+          }}
           icon={
             <div style={{ position: 'relative', width: '100%', height: '100%' }}>
               <img 
@@ -204,8 +305,10 @@ const IndexPage = () => {
                   top: '50%', 
                   left: '50%', 
                   transform: 'translate(-50%, -50%)', 
-                  width: '60%', 
-                  height: '60%', 
+                  width: role.icon === awsLogo ? '87%' : '100%',
+                  height: role.icon === awsLogo ? '87%' : '100%',
+                  borderRadius: '50%',
+                  objectFit: 'cover',
                 }} 
               />
             </div>
@@ -248,47 +351,49 @@ const IndexPage = () => {
               <section id="skills" data-aos="fade-up" className="section-content">
                 <h2>Skills & Certifications</h2>
                 <div className="skills-container">
-                  <div className="skills-box">
-                    <h3>Technical Skills</h3>
-                    <ul>
-                      <li>Programming Languages: Python, Java, C, Swift</li>
-                      <li>Cloud Computing: AWS, Azure</li>
-                      <li>Web Development: JavaScript, React, HTML, CSS, Node.js </li>
-                      <li>Data Tools: Pandas, Scikit-Learn, Jupyter, Pytorch</li> 
-                      <li>Database Management: SQL,Docker, Kubernetes</li>                                                   
-                    </ul>
+                  <div className="skills-row first-row">
+                    <div className="skills-box">
+                      <h3>Technical Skills</h3>
+                      <ul>
+                        <li>Programming Languages: Python, Java, C, Swift</li>
+                        <li>Cloud Computing: AWS, Azure</li>
+                        <li>Web Development: JavaScript, React, HTML, CSS, Node.js </li>
+                        <li>Data Tools: Pandas, Scikit-Learn, Jupyter, PyTorch</li> 
+                        <li>Database Management: SQL, Docker, Kubernetes</li>                                                   
+                      </ul>
+                    </div>
+                    <div className="skills-box">
+                      <h3>Certifications</h3>
+                      <ul>
+                        <li><a href="https://aws.amazon.com/certification/certified-solutions-architect-associate/" target="_blank">AWS Certified Solutions Architect</a></li>
+                        <li><a href="https://aws.amazon.com/certification/certified-data-engineer-associate/?ch=sec&sec=rmg&d=1" target="_blank">AWS Certified Data Engineer Associate</a></li>
+                        <li><a href="https://aws.amazon.com/certification/certified-cloud-practitioner/" target="_blank">AWS Certified Cloud Practitioner</a></li>
+                        <li><a href="https://aws.amazon.com/certification/certified-ai-practitioner/" target="_blank">AWS Certified AI Practitioner</a></li>
+                      </ul>
+                    </div>
+
+                    <div className="skills-box">
+                      <h3>Upcoming Certifications</h3>
+                      <ul>
+                        <li><a href="https://aws.amazon.com/certification/certified-machine-learning-specialty/" target="_blank">AWS Certified Machine Learning - Specialty</a></li>
+                        <li><a href="https://aws.amazon.com/certification/certified-developer-associate/" target="_blank">AWS Certified Developer - Associate</a></li>
+                        <li>Azure Certifications</li>
+                        <li></li>
+                      </ul>
+                    </div>
                   </div>
-                  <div className="skills-box">
-  <h3>Certifications</h3>
-  <ul>
-  <li><a href="https://aws.amazon.com/certification/certified-solutions-architect-associate/" target="_blank">AWS Certified Solutions Architect</a></li>
-  <li><a href="https://aws.amazon.com/certification/certified-data-engineer-associate/?ch=sec&sec=rmg&d=1" target="_blank">AWS Certified Data Engineer Associate</a></li>
-  <li><a href="https://aws.amazon.com/certification/certified-cloud-practitioner/" target="_blank">AWS Certified Cloud Practitioner</a></li>
-  <li><a href="https://aws.amazon.com/certification/certified-ai-practitioner/" target="_blank">AWS Certified AI Practioner</a></li>
-  </ul>
-</div>
 
-<div className="skills-box">
-  <h3>Upcoming Certifications</h3>
-  <ul>
-  <li><a href="https://aws.amazon.com/certification/certified-machine-learning-specialty/" target="_blank">AWS Certified Machine Learning - Specialty</a></li>
-  <li><a href="https://aws.amazon.com/certification/certified-developer-associate/" target="_blank">AWS Certified Developer - Associate</a></li>
-    <li>Azure Certifications</li>
-    <li></li>
-  </ul>
-</div>
-
-
-<div className="skills-box">
-  <h3>Skills in training</h3>
-  <ul>
-  <li>Taking courses in Machine Learning University to learn Neural Networking, Training Data,Language chains, AutoGluon</li>
-  <li>At work training with AWS SimSpaceWeaver to learn how to simulate</li>
-    <li>Learning tensorFlow</li>
-    <li>Learning how to play acutal Golf</li>
-  </ul>
-</div>
-
+                      <div className="skills-row wide-row">
+                    <div className="skills-box skills-box-wide">
+                      <h3>Skills in training</h3>
+                      <ul>
+                        <li>Taking courses in Machine Learning University to learn neural networks, training data, language chains, and AutoGluon.</li>
+                        <li>Training with AWS SimSpaceWeaver to learn how to simulate at scale.</li>
+                        <li>Learning TensorFlow.</li>
+                        <li>Learning how to play actual golf.</li>
+                      </ul>
+                    </div>
+                  </div>
                 </div>
                 </section>
 
@@ -303,11 +408,11 @@ const IndexPage = () => {
                     </header>
                     <section>
                       <p>
-                      Using AWS Amplify SDK, Developed backend and frontend for a iOS app. 
+                      Using AWS Amplify SDK, developed the backend and frontend for an iOS app. 
                       The iOS app is integrated with the AppSync API, which interacts with DynamoDB as the backend for data storage, 
                       and uses Cognito for authentication.
-                      users submit data to be stored in a DynamoDB table for querying.
-                      Utilized Amplify CLI, Xcode, Cocoa Pods, Swift                       
+                      Users submit data to be stored in a DynamoDB table for querying.
+                      Utilized Amplify CLI, Xcode, CocoaPods, Swift.                       
                       </p>
                     </section>
                     <footer className="author">
@@ -322,11 +427,11 @@ const IndexPage = () => {
                     </header>
                     <section>
                       <p>
-                      Using AWS Amplify SDK, Developed backend and frontend for a Android app. 
+                      Using AWS Amplify SDK, developed the backend and frontend for an Android app. 
                       The Android app is integrated with the AppSync API, which interacts with DynamoDB as the backend for data storage, 
                       and uses Cognito for authentication.
-                      users submit data to be stored in a DynamoDB table for querying.
-                      Utilized Amplify CLI, Android Studio, and Node.js                       
+                      Users submit data to be stored in a DynamoDB table for querying.
+                      Utilized Amplify CLI, Android Studio, and Node.js.                       
                       </p>
                     </section>
                     <footer className="author">
@@ -342,8 +447,8 @@ const IndexPage = () => {
                     </header>
                     <section>
                       <p>
-                    Creating a Stock Market Tracker Dashboard ETL Pipeline Using Python, AWS Athena for processing. Will be using Tiingo stock API
-                    gather real time data and stock changes.                     
+                    Creating a stock market tracker dashboard ETL pipeline using Python and AWS Athena for processing. Will use the Tiingo stock API
+                    to gather real-time data and stock changes.                     
                       </p>
                     </section>
                     <footer className="author">
@@ -358,8 +463,8 @@ const IndexPage = () => {
                     </header>
                     <section>
                       <p>
-                        Built a personal website to showcase my resume and other skills, built using gatsby, and uses html, css, react, javscript.
-                        Currently in the process of learning how to make custom animations, transitions, and layouts for websites.
+                        Built a personal website to showcase my resume and other skills, using Gatsby with HTML, CSS, React, and JavaScript.
+                        Currently learning how to make custom animations, transitions, and layouts for websites.
                       </p>
                     </section>
                     <footer className="author">
@@ -374,7 +479,7 @@ const IndexPage = () => {
                     </header>
                     <section>
                       <p>
-                        Developing a robust and scalable personal web server in C. Aiming to implement HTTP/1.1, file sharing, MP4 streaming, and Token-based authentication. Going to gain expertise in network protocols, security, and concurrent programming.
+                        Developing a robust and scalable personal web server in C. Aiming to implement HTTP/1.1, file sharing, MP4 streaming, and token-based authentication. Gaining expertise in network protocols, security, and concurrent programming.
                       </p>
                     </section>
                     <footer className="author">
@@ -389,7 +494,7 @@ const IndexPage = () => {
                     </header>
                     <section>
                       <p>
-                        Data Structure that supporting 3D point set: Implemented a high-performance data structure supporting range queries in 3D space. Utilized Range Trees and KD-Trees to efficiently compute the number of points within or on the boundary of a given rectangular prism. Achieved optimal time and space complexities.
+                        Implemented a high-performance data structure supporting range queries in 3D space. Utilized Range Trees and KD-Trees to efficiently compute the number of points within or on the boundary of a given rectangular prism. Achieved optimal time and space complexities.
                       </p>
                     </section>
                     <footer className="author">
@@ -422,7 +527,7 @@ const IndexPage = () => {
                     </header>
                     <section>
                       <p>
-                        Developed a Java-based tracker that categorized COVID-19 data by ethnicity, infection rates, providing insights into regional and demographic impacts.
+                        Developed a Java-based tracker that categorized COVID-19 data by ethnicity and infection rates, providing insights into regional and demographic impacts.
                       </p>
                     </section>
                     <footer className="author">

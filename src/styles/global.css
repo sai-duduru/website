@@ -90,6 +90,60 @@ body {
   box-sizing: border-box;
 }
 
+.top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 26px;
+  margin: 0 auto;
+  max-width: 1200px;
+  background: linear-gradient(135deg, rgba(15,23,42,0.82), rgba(17,28,50,0.82));
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(123,210,255,0.08);
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.28);
+}
+
+.nav-brand {
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: var(--text-primary);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.nav-links a,
+.nav-contact {
+  color: var(--text-primary);
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+  border: none;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+.nav-links a:hover,
+.nav-contact:hover {
+  background: rgba(123,210,255,0.12);
+  color: #b8e6ff;
+  transform: translateY(-1px);
+}
+
+.nav-contact {
+  background: linear-gradient(120deg, rgba(123,210,255,0.25), rgba(123,210,255,0.1));
+  border: 1px solid rgba(123,210,255,0.35);
+}
+
 header h1 {
   font-size: 11em;
   text-align: center;
@@ -184,6 +238,7 @@ header h1 {
   margin: 20px 0;
   font-size: 3em;
   text-align: center;
+  position: relative;
 }
 
 .typewriter {
@@ -214,6 +269,16 @@ header h1 {
 
 .shine {
   animation: shine 1s linear forwards;
+}
+
+.straw-hat {
+  position: absolute;
+  width: 110px;
+  top: -20px;
+  left: 53.5%;
+  transform: rotate(18deg);
+  pointer-events: none;
+  filter: drop-shadow(0 6px 12px rgba(0,0,0,0.3));
 }
 
 @keyframes shine {
@@ -308,9 +373,26 @@ header h1 {
 
 .skills-container {
   display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+  width: 100%;
+}
+
+.skills-row {
+  display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 25px;
+  width: 100%;
+}
+
+.skills-row.first-row {
+  max-width: 1200px;
+}
+
+.skills-row.wide-row {
+  justify-content: center;
 }
 
 .skills-box, .certifications-box {
@@ -334,6 +416,11 @@ header h1 {
   margin-top: 0;
   font-size: 1.5em;
   text-transform: uppercase;
+}
+
+.skills-box-wide {
+  flex: 1 1 100%;
+  max-width: 900px;
 }
 
 .skills-list, .certifications-list {
@@ -583,6 +670,63 @@ footer p {
   margin: 0;
 }
 
+@media screen and (max-width: 1024px) {
+  .content {
+    padding: 16px;
+  }
+
+  .main-container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .container {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    padding: 30px 20px;
+  }
+
+  .skills-row.first-row {
+    justify-content: center;
+  }
+
+  .top-nav {
+    max-width: none;
+  }
+
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  /* Timeline: single column on narrower viewports */
+  .vertical-timeline::before {
+    left: 28px;
+    transform: none;
+  }
+
+  .vertical-timeline-element {
+    margin: 0 0 48px 0;
+    padding-left: 12px;
+  }
+
+  .vertical-timeline-element-icon {
+    left: 28px;
+    transform: translate(-50%, -20%);
+  }
+
+  .vertical-timeline-element-content {
+    margin-left: 52px;
+  }
+
+  .vertical-timeline-element-date {
+    position: relative;
+    top: auto;
+    right: auto;
+    display: inline-block;
+    margin-bottom: 12px;
+  }
+}
+
 @media screen and (max-width: 768px) {
   .container {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -599,17 +743,96 @@ footer p {
     padding: 10px;
   }
 
+  .main-container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
   .name-container {
-    font-size: 2em;
+    font-size: 1.6em;
   }
 
   header h1 {
     font-size: 4em;
   }
 
+  .vertical-timeline::before {
+    left: 24px;
+    transform: none;
+  }
+
+  .vertical-timeline-element {
+    margin: 0 0 44px 0;
+    padding-left: 8px;
+  }
+
+  .vertical-timeline-element-icon {
+    left: 24px;
+    transform: translate(-50%, -20%);
+  }
+
+  .vertical-timeline-element-content {
+    margin-left: 50px;
+  }
+
   .vertical-timeline-element-date {
-    position: static;
-    margin-top: 10px;
-    text-align: right;
+    position: relative;
+    top: auto;
+    right: auto;
+    display: inline-block;
+    margin: 0 0 10px 0;
+    text-align: left;
+  }
+
+  .top-nav {
+    max-width: none;
+    border-radius: 0;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 16px;
+  }
+
+  .nav-links {
+    gap: 10px;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .straw-hat {
+    width: 82px;
+    top: -16px;
+    left: 51.5%;
+    transform: rotate(18deg);
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .skills-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .skills-box, .certifications-box {
+    min-width: 100%;
+  }
+
+  .container {
+    grid-template-columns: 1fr;
+    padding: 16px;
+  }
+
+  .main-container {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .top-nav {
+    justify-content: center;
+  }
+
+  .nav-links {
+    justify-content: center;
   }
 }
