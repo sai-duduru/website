@@ -210,6 +210,7 @@ header h1 {
 }
 
 .auto-scroll-toggle {
+  display: none;
   background: linear-gradient(120deg, rgba(123,210,255,0.25), rgba(123,210,255,0.1));
   border: 1px solid rgba(123,210,255,0.35);
   color: var(--text-primary);
@@ -985,10 +986,19 @@ header h1 {
 }
 
 .container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  grid-gap: 2em;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2em;
   padding: 50px;
+  justify-content: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.container .card {
+  flex: 1 1 320px;
+  max-width: 360px;
+  min-width: 280px;
 }
 
 .card {
@@ -1221,8 +1231,14 @@ footer p {
   }
 
   .container {
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    max-width: 900px;
     padding: 30px 20px;
+  }
+
+  .container .card {
+    flex: 1 1 300px;
+    max-width: 420px;
+    min-width: 260px;
   }
 
   .skills-row.first-row {
@@ -1275,8 +1291,14 @@ footer p {
 
 @media screen and (max-width: 768px) {
   .container {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    max-width: 100%;
     padding: 20px;
+  }
+
+  .container .card {
+    flex: 1 1 100%;
+    max-width: 100%;
+    min-width: 0;
   }
 
   .card {

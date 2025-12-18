@@ -7,6 +7,8 @@
 /**
  * @type {import('gatsby').GatsbyConfig}
  */
+const measurementId = process.env.GATSBY_GA_MEASUREMENT_ID;
+
 module.exports = {
   siteMetadata: {
     title: `Gatsby Default Starter`,
@@ -39,5 +41,14 @@ module.exports = {
         icon: `src/images/gatsby-icon.png`, // This path is relative to the root of the site.
       },
     },
-  ],
+    measurementId && {
+      resolve: `gatsby-plugin-google-gtag`,
+      options: {
+        trackingIds: [measurementId],
+        pluginConfig: {
+          head: true,
+        },
+      },
+    },
+  ].filter(Boolean),
 }

@@ -201,7 +201,7 @@ const IndexPage = () => {
   const experiences = [
     {
       id: 'aws-dmi',
-      title: 'Cloud Support Engineer (DMI)',
+      title: 'Cloud Engineer (DMI)',
       subtitle: 'Amazon Web Services, Herndon, VA',
       date: 'June 2024 – Present',
       icon: awsLogo,
@@ -451,6 +451,21 @@ const IndexPage = () => {
                 <div className="card" data-aos="fade-up">
                     <header>
                       <span></span>
+                      <h6>Tennis Prediction App</h6>
+                    </header>
+                    <section>
+                      <p>
+                        ATP Tennis Match Predictor — Python, pandas, scikit-learn, PyTorch, FastAPI, Next.js. Engineered features from prior matches (Elo, surface performance, head-to-head) on Kaggle ATP data and trained/evaluated models with ROC-AUC, LogLoss, and Brier score on time-split datasets. Deployed a FastAPI backend and Next.js frontend for matchup comparisons and player analytics, with CI tests covering the model and API.
+                      </p>
+                    </section>
+                    <footer className="author">
+                      <a href="https://github.com/sai-duduru/Tennis-Predictor">Read more</a>
+                    </footer>
+                  </div>
+
+                <div className="card" data-aos="fade-up">
+                    <header>
+                      <span></span>
                       <h6>Created iOS App using AWS Amplify SDK</h6>
                     </header>
                     <section>
@@ -463,7 +478,7 @@ const IndexPage = () => {
                       </p>
                     </section>
                     <footer className="author">
-                      <a href="https://github.com/SaiDuduru">Read more</a>
+                      <a href="https://github.com/sai-duduru/website">Read more</a>
                     </footer>
                   </div>
 
@@ -534,57 +549,6 @@ const IndexPage = () => {
                     </footer>
                   </div>
 
-                  <div className="card" data-aos="fade-up">
-                    <header>
-                      <span></span>
-                      <h6>CS 3114 Data Structure</h6>
-                    </header>
-                    <section>
-                      <p>
-                        Implemented a high-performance data structure supporting range queries in 3D space. Utilized Range Trees and KD-Trees to efficiently compute the number of points within or on the boundary of a given rectangular prism. Achieved optimal time and space complexities.
-                      </p>
-                    </section>
-                    <footer className="author">
-                      <a href="https://github.com/SaiDuduru">Read more</a>
-                    </footer>
-                  </div>
-
-                  <div className="card" data-aos="fade-up">
-                    <header>
-                      <span></span>
-                      <h6>CS 3114 Kruskal’s</h6>
-                    </header>
-                    <section>
-                      <p>
-                        Implemented Kruskal's algorithm to compute the cost of the minimum spanning tree and perform k-clustering on a weighted connected undirected graph. Utilized Union-Find data structure with path compression technique to optimize runtime efficiency and achieved accurate results on multiple test cases.
-                      </p>
-                    </section>
-                    <footer className="author">
-  <a href="https://github.com/SaiDuduru">Read more</a>
-</footer>
-
-                  </div>
-
-                 
-
-                  <div className="card" data-aos="fade-up">
-                    <header>
-                      <span></span>
-                      <h6>Covid Tracker</h6>
-                    </header>
-                    <section>
-                      <p>
-                        Developed a Java-based tracker that categorized COVID-19 data by ethnicity and infection rates, providing insights into regional and demographic impacts.
-                      </p>
-                    </section>
-                    <footer className="author">
-                      <a href="https://github.com/SaiDuduru">Read more</a>
-                    </footer>
-                  </div>
-
-                 
-
-                  
                 </div>
               </section>
             </div>
