@@ -35,7 +35,7 @@ const IndexPage = () => {
     // Simulate loading time, then set isLoading to false
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 2000); // Adjust the delay as needed
+    }, 1200); // Slightly faster to reduce perceived wait
 
     return () => clearTimeout(timer);
   }, []);
