@@ -54,4 +54,5 @@ The static output in `public/` can be deployed to Netlify, Vercel, S3/CloudFront
 - `src/styles/` – global, loading, and modal styling.
 - `static/` – public assets (e.g., `resume.pdf`).
 - `gatsby-config.js` – site metadata, manifest, and analytics wiring.
->>>>>>> bc64dbd (readme)
+
+
