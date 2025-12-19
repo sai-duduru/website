@@ -1,85 +1,57 @@
-<!-- AUTO-GENERATED-CONTENT:START (STARTER) -->
-<p align="center">
-  <a href="https://www.gatsbyjs.com">
-    <img alt="Gatsby" src="https://www.gatsbyjs.com/Gatsby-Monogram.svg" width="60" />
-  </a>
-</p>
-<h1 align="center">
-  Gatsby's default starter
-</h1>
+=======
+# Sai Duduru — Personal Website (Gatsby 5)
 
-## 🚀 Quick start
+Animated personal site built with Gatsby and React to showcase experience, skills, and projects. The landing page includes a typewriter intro, animated loader, responsive timeline, and floating quick actions for LinkedIn, GitHub, and a resume download.
 
-1.  **Create a Gatsby site.**
+## Highlights
+- Animated welcome screen, typewriter hero, and cursor-following background glow for a lively first impression.
+- Work timeline with collapsible bullet points, responsive layouts (two-column or single-column), and an optional auto-scroll tour.
+- Skills and certification grid, plus project cards linking to detailed repos and writeups.
+- Floating quick-action buttons for LinkedIn, GitHub, resume download, and a contact modal with direct emails.
+- Scroll-triggered motion via `aos` and `react-vertical-timeline-component` for smooth section reveals.
 
-    Use the Gatsby CLI ([install instructions](https://www.gatsbyjs.com/docs/tutorial/getting-started/part-0/#gatsby-cli)) to create a new site, specifying the default starter.
+## Tech Stack
+- Gatsby 5, React 18
+- AOS for scroll animations
+- react-vertical-timeline-component for the experience section
+- Custom CSS in `src/styles` plus static assets in `src/components/picutres` and `static/`
 
-    ```shell
-    # create a new Gatsby site using the default starter
-    gatsby new my-default-starter https://github.com/gatsbyjs/gatsby-starter-default
-    ```
+## Prerequisites
+- Node.js 18+ (required by Gatsby 5)
+- npm or yarn
 
-1.  **Start developing.**
+## Quick Start
+```bash
+npm install          # or yarn
+npm run develop      # starts http://localhost:8000
+# GraphiQL is available at http://localhost:8000/___graphql during development
+```
 
-    Navigate into your new site’s directory and start it up.
+## Scripts
+- `npm run develop` – local dev server with hot reload.
+- `npm run build` – production build to `public/`.
+- `npm run serve` – serve the production build locally.
+- `npm run clean` – clear Gatsby caches.
+- `npm run format` – format JS/TS/JSON/MD/CSS with Prettier.
 
-    ```shell
-    cd my-default-starter/
-    gatsby develop
-    ```
+## Content & Customization
+- Hero, about text, work experiences (the `experiences` array), skills, certifications, and projects live in `src/pages/index.js`.
+- Contact emails are defined in `src/pages/Modal.js`.
+- Resume download is served from `static/resume.pdf`; replace that file to update the floating resume button.
+- Global styles: `src/styles/global.css`; loader styles: `src/styles/loading.css`; modal styles: `src/styles/modal.css`.
+- Images/icons are under `src/components/picutres/`; adjust imports in `src/pages/index.js` if you rename assets.
+- Site metadata and manifest live in `gatsby-config.js`. Optionally set `GATSBY_GA_MEASUREMENT_ID` to enable Google Analytics.
 
-1.  **Open the source code and start editing!**
+## Build & Deploy
+```bash
+npm run build
+```
+The static output in `public/` can be deployed to Netlify, Vercel, S3/CloudFront, or any static host. If you change the base path, update `start_url` and related paths in `gatsby-config.js`.
 
-    Your site is now running at `http://localhost:8000`!
-
-    Note: You'll also see a second link: `http://localhost:8000/___graphql`. This is a tool you can use to experiment with querying your data. Learn more about using this tool in the [Gatsby Tutorial](https://www.gatsbyjs.com/docs/tutorial/getting-started/part-4/#use-graphiql-to-explore-the-data-layer-and-write-graphql-queries).
-
-    Open the `my-default-starter` directory in your code editor of choice and edit `src/pages/index.js`. Save your changes and the browser will update in real time!
-
-## 🚀 Quick start (Netlify)
-
-Deploy this starter with one click on [Netlify](https://app.netlify.com/signup):
-
-[<img src="https://www.netlify.com/img/deploy/button.svg" alt="Deploy to Netlify" />](https://app.netlify.com/start/deploy?repository=https://github.com/gatsbyjs/gatsby-starter-default)
-
-## 🧐 What's inside?
-
-A quick look at the top-level files and directories you'll see in a typical Gatsby project.
-
-    .
-    ├── node_modules
-    ├── src
-    ├── .gitignore
-    ├── gatsby-browser.js
-    ├── gatsby-config.js
-    ├── gatsby-node.js
-    ├── gatsby-ssr.js
-    ├── LICENSE
-    ├── package.json
-    └── README.md
-
-1.  **`/node_modules`**: This directory contains all of the modules of code that your project depends on are automatically installed.
-
-1.  **`/src`**: This directory will contain all of the code related to what you will see on the front-end of your site.
-
-1.  **`.gitignore`**: This file tells git which files it should not track / not maintain a version history for.
-
-1.  **`gatsby-browser.js`**: This file is where Gatsby expects to find any usage of the [Gatsby browser APIs](https://www.gatsbyjs.com/docs/reference/config-files/gatsby-browser/)
-
-1.  **`gatsby-config.js`**: This is the main configuration file for a Gatsby site. 
-
-1.  **`gatsby-node.js`**: This file is where Gatsby expects to find any usage of the [Gatsby Node APIs](https://www.gatsbyjs.com/docs/reference/config-files/gatsby-node/) 
-
-1.  **`gatsby-ssr.js`**: This file is where Gatsby expects to find any usage of the [Gatsby server-side rendering APIs](https://www.gatsbyjs.com/docs/reference/config-files/gatsby-ssr/) 
-
-1.  **`LICENSE`**: This Gatsby starter is licensed under the 0BSD license.
-
-1.  **`package.json`**: A manifest file for Node.js projects, which includes metadata.
-1.  **`README.md`**: A TEXTFILE FOR A OVERVIEW.
-
-
-
-<!-- AUTO-GENERATED-CONTENT:END -->
-=====
-
-
+## Project Structure (key paths)
+- `src/pages/index.js` – main landing page with all sections.
+- `src/pages/Modal.js` – contact modal component.
+- `src/styles/` – global, loading, and modal styling.
+- `static/` – public assets (e.g., `resume.pdf`).
+- `gatsby-config.js` – site metadata, manifest, and analytics wiring.
+>>>>>>> bc64dbd (readme)
